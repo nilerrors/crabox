@@ -1,7 +1,9 @@
-inc r1
+; PROGRAM TO CALCULATE THE FIBONACCI SEQUENCE
+inc r1			; 1
 store r1
-inc ap
+inc ap			; 1
 store r1
+; FIBONACCI FROM THE 3RD NUMBER ON
 inc ap
 dec ap
 dec ap

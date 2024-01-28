@@ -28,7 +28,15 @@ struct Lexer
             case '\n':
                 tokens ~= Token(TokenType.eol, "\n");
                 break;
-            case ' ':
+            case ';':
+                current++;
+                while (current < source.length && source[current] != '\n')
+                {
+                    current++;
+                }
+                current--;
+                break;
+            case ' ', '\t':
                 break;
             case 'a': .. case 'z':
                 string value = "";
