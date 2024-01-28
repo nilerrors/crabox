@@ -1,0 +1,28 @@
+%YAML 1.2
+---
+
+name: Crabox
+file_extensions:
+  - crabox
+scope: source.crabox
+contexts:
+  main:
+    - match: ';'
+      scope: punctuation.definition.comment.crabox
+      push: line_comment
+
+    - match: '\b(zero|inc|dec|load|store|brnz|j|jal|or|add|sub|inv|noop)\b'
+      scope: keyword.other.crabox
+      comment: 'Instruction'
+
+    - match: '\b(r0|r1|r2|r3|r4|r5|r6|ap)\b'
+      scope: constant.other.crabox
+      comment: 'Register'
+
+    - match: '\b(-)?[0-9.]+\b'
+      scope: constant.numeric.crabox
+
+  line_comment:
+    - meta_scope: comment.line.crabox
+    - match: $
+      pop: true
