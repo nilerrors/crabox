@@ -1,0 +1,17 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/crabox
+crabox
+crabox.so
+crabox.dylib
+crabox.dll
+crabox.a
+crabox.lib
+crabox-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

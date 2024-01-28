@@ -1,0 +1,14 @@
+inc r1
+store r1
+inc ap
+store r1
+inc ap
+dec ap
+dec ap
+load r1
+inc ap
+load r2
+inc ap
+add r1 r2
+inc ap
+j 5

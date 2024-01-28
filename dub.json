@@ -1,0 +1,12 @@
+{
+	"authors": [
+		"nilerrors"
+	],
+	"copyright": "Copyright © 2024, nilerrors",
+	"dependencies": {
+		"arsd-official:terminal": "~>11.3.0"
+	},
+	"description": "Custom ASM compiler.",
+	"license": "MIT",
+	"name": "crabox"
+}
