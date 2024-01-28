@@ -1,0 +1,3 @@
+; INCREASE AP INFINITELY
+inc ap
+j 0

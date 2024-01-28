@@ -74,7 +74,10 @@ struct Lexer
                     current++;
                     if (current >= source.length) break;
                 }
-                tokens ~= Token(TokenType.number, value);
+                if (value == "-")
+                    tokens ~= Token(TokenType.illegal, value);
+                else
+                    tokens ~= Token(TokenType.number, value);
                 break;
             default:
                 string value;

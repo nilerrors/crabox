@@ -70,13 +70,41 @@ struct RegisterFile
 	const byte r0 = 0;
 
 private:
-	byte r1;
-	byte r2;
-	byte r3;
-	byte r4;
-	byte r5;
-	byte r6;
-	byte ap;
+	union
+	{
+		byte r1;
+		ubyte r1_u;
+	}
+	union
+	{
+		byte r2;
+		ubyte r2_u;
+	}
+	union
+	{
+		byte r3;
+		ubyte r3_u;
+	}
+	union
+	{
+		byte r4;
+		ubyte r4_u;
+	}
+	union
+	{
+		byte r5;
+		ubyte r5_u;
+	}
+	union
+	{
+		byte r6;
+		ubyte r6_u;
+	}
+	union
+	{
+		byte ap;
+		ubyte ap_u;
+	}
 
 public:
 	void reset()
@@ -106,6 +134,22 @@ public:
 		}
 	}
 
+	ubyte read_u(RegisterType r)
+	{
+		switch (r)
+		{
+		case RegisterType.r0: return r0;
+		case RegisterType.r1: return r1_u;
+		case RegisterType.r2: return r2_u;
+		case RegisterType.r3: return r3_u;
+		case RegisterType.r4: return r4_u;
+		case RegisterType.r5: return r5_u;
+		case RegisterType.r6: return r6_u;
+		case RegisterType.ap: return ap_u;
+		default:              return r0;
+		}
+	}
+
 	void write(RegisterType rs, byte data)
 	{
 		switch (rs)
@@ -118,6 +162,21 @@ public:
 		case RegisterType.r6: r6 = data; return;
 		case RegisterType.ap: ap = data; return;
 		default:                         return;
+		}
+	}
+
+	void write_u(RegisterType rs, ubyte data)
+	{
+		switch (rs)
+		{
+		case RegisterType.r1: r1_u = data; return;
+		case RegisterType.r2: r2_u = data; return;
+		case RegisterType.r3: r3_u = data; return;
+		case RegisterType.r4: r4_u = data; return;
+		case RegisterType.r5: r5_u = data; return;
+		case RegisterType.r6: r6_u = data; return;
+		case RegisterType.ap: ap_u = data; return;
+		default:                           return;
 		}
 	}
 }
@@ -210,17 +269,17 @@ struct Simulator
 			this.registers.write(current_instruction.parameters[0].register, 0);
 			break;
 		case InstructionType.inc:
-			this.registers.write(
+			this.registers.write_u(
 				current_instruction.parameters[0].register,
-				ALU(ALU_OP.ADD, this.registers.read(current_instruction.parameters[0].register), 1));
+				ALU(ALU_OP.ADD, this.registers.read_u(current_instruction.parameters[0].register), 1));
 			break;
 		case InstructionType.dec:
-			this.registers.write(
+			this.registers.write_u(
 				current_instruction.parameters[0].register,
-				ALU(ALU_OP.SUB, this.registers.read(current_instruction.parameters[0].register), 1));
+				ALU(ALU_OP.SUB, this.registers.read_u(current_instruction.parameters[0].register), 1));
 			break;
 		case InstructionType.inv:
-			this.memory[this.registers.read(RegisterType.ap)] = 
+			this.memory[this.registers.read_u(RegisterType.ap)] = 
 						ALU(ALU_OP.INV, this.registers.read(current_instruction.parameters[0].register), 0);
 			break;
 		case InstructionType.load:
@@ -229,34 +288,34 @@ struct Simulator
 				this.memory[this.registers.read(RegisterType.ap)]);
 			break;
 		case InstructionType.store:
-			this.memory[this.registers.read(RegisterType.ap)] = 
+			this.memory[this.registers.read_u(RegisterType.ap)] = 
 						this.registers.read(current_instruction.parameters[0].register);
 			break;
 		case InstructionType.brnz:
-			if (this.memory[this.registers.read(RegisterType.ap)] != 0) 
+			if (this.memory[this.registers.read_u(RegisterType.ap)] != 0) 
 				pc.clock(BranchType.relative, cast(byte)(current_instruction.parameters[0].number));
 			return;
 		case InstructionType.j:
 			pc.clock(BranchType.absolute, cast(ubyte)(current_instruction.parameters[0].number));
 			return;
 		case InstructionType.jal:
-			this.memory[this.registers.read(RegisterType.ap)] = this.pc.address;
+			this.memory[this.registers.read_u(RegisterType.ap)] = this.pc.address;
 			pc.clock(BranchType.absolute, cast(ubyte)(current_instruction.parameters[0].number));
 			return;
 		case InstructionType.or:
-			this.memory[this.registers.read(RegisterType.ap)] = 
+			this.memory[this.registers.read_u(RegisterType.ap)] = 
 						ALU(ALU_OP.OR,
 							this.registers.read(current_instruction.parameters[0].register),
 							this.registers.read(current_instruction.parameters[1].register));
 			break;
 		case InstructionType.add:
-			this.memory[this.registers.read(RegisterType.ap)] = 
+			this.memory[this.registers.read_u(RegisterType.ap)] = 
 						ALU(ALU_OP.ADD,
 							this.registers.read(current_instruction.parameters[0].register),
 							this.registers.read(current_instruction.parameters[1].register));
 			break;
 		case InstructionType.sub:
-			this.memory[this.registers.read(RegisterType.ap)] = 
+			this.memory[this.registers.read_u(RegisterType.ap)] = 
 						ALU(ALU_OP.SUB,
 							this.registers.read(current_instruction.parameters[0].register),
 							this.registers.read(current_instruction.parameters[1].register));

@@ -1,6 +1,7 @@
 import std.stdio;
 import std.file;
 import std.string;
+import std.conv;
 
 import arsd.terminal;
 
@@ -30,6 +31,8 @@ void main(const string[] args)
 
     if (args[1] == "simulate")
     {
+        auto tps_arg = cli.find_opt(args, "-tps");
+
         if (!source_arg.found)
         {
             writeln("source file not given");
@@ -52,7 +55,18 @@ void main(const string[] args)
         else
         {
             Simulator simulator = Simulator(instructions);
-            simulator.start();
+            double ticks_per_second = 1;
+            if (tps_arg.found)
+            {
+                try
+                    ticks_per_second = to!double(tps_arg.option);
+                catch(ConvException err)
+                {
+                    writeln("expected double for `ticks per second`, got: ", tps_arg.option);
+                    return;
+                }
+            }
+            simulator.start(ticks_per_second);
         }
         
 
